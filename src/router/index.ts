@@ -11,7 +11,7 @@ readdirSync(__dirname).forEach((file) => {
 	if (file === 'index.ts') return;
 	router.use(`/${removeExtension(file)}`, require(`./${file}`).default);
 
-	console.log(`Route ${removeExtension(file)} loaded!`);
+	console.log(`Route ${removeExtension(file)} loaded...`);
 });
 
 console.log('\nRoutes loaded!');
