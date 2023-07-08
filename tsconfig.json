@@ -4,6 +4,7 @@
 		"moduleResolution": "Node",
 		"target": "ES6",
 		"skipLibCheck": true,
+		"esModuleInterop": true,
 		"sourceMap": true,
 		"outDir": "dist",
 		"forceConsistentCasingInFileNames": true,
