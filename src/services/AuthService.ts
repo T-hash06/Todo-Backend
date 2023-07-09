@@ -1,4 +1,4 @@
-import { verify, sign } from 'jsonwebtoken';
+import { verify, sign, TokenExpiredError } from 'jsonwebtoken';
 
 import { SessionModel } from '../models/AuthModel';
 import type { ServiceResponse } from '../util/Http';
@@ -17,9 +17,13 @@ export async function checkSessionValid(
 
 		return { code: 200, data: null };
 	} catch (e: unknown) {
+		if (e instanceof TokenExpiredError) {
+			return { code: 401, data: null };
+		}
+
 		console.log(e);
 
-		return { code: 401, data: null };
+		return { code: 500, data: null };
 	}
 }
 
@@ -66,8 +70,12 @@ export async function extendSession(
 
 		return { code: 200, data: newToken };
 	} catch (e: unknown) {
+		if (e instanceof TokenExpiredError) {
+			return { code: 401, data: null };
+		}
+
 		console.log(e);
 
-		return { code: 401, data: null };
+		return { code: 500, data: null };
 	}
 }
