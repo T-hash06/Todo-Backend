@@ -1,4 +1,5 @@
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
+import { ValidationError } from 'runtypes';
 
 import { NewUserModel } from '../models/UserModel';
 import * as UserService from '../services/UserService';
@@ -20,6 +21,9 @@ export async function post(req: TypedBodyRequest<NewUserModel>, res: Response) {
 
 		res.status(response.code).json(response.data);
 	} catch (e: unknown) {
+		if (e instanceof ValidationError) {
+			return res.status(400).send(e.details);
+		}
 		res.status(500).send(e);
 	}
 }
