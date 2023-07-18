@@ -1,8 +1,9 @@
 import { Record, Number, String, Static } from 'runtypes';
 
 export const SessionModel = Record({
-	userId: Number,
-	timestamp: Number,
+	username: String,
+	iat: Number,
+	exp: Number,
 });
 
 export const RequestSessionModel = Record({

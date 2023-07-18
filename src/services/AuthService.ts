@@ -1,6 +1,6 @@
 import { verify, sign, TokenExpiredError } from 'jsonwebtoken';
 
-import { SessionModel } from '../models/AuthModel';
+import type { SessionModel } from '../models/AuthModel';
 import type { ServiceResponse } from '../util/Http';
 
 import database from '../database/db';
@@ -13,15 +13,13 @@ export async function checkSessionValid(
 	token: string
 ): Promise<ServiceResponse<SessionModel | null>> {
 	try {
-		const payload = verify(token, process.env.JWT_SECRET);
+		const payload = verify(token, process.env.JWT_SECRET) as SessionModel;
 
-		return { code: 200, data: null };
+		return { code: 200, data: payload };
 	} catch (e: unknown) {
 		if (e instanceof TokenExpiredError) {
 			return { code: 401, data: null };
 		}
-
-		console.log(e);
 
 		return { code: 500, data: null };
 	}
