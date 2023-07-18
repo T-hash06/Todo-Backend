@@ -41,3 +41,16 @@ export async function createOne(
 		return { code: 500, data: null };
 	}
 }
+
+// TEMP
+export async function deleteAll(): Promise<ServiceResponse<null>> {
+	try {
+		await database.user.deleteMany();
+
+		return { code: 200, data: null };
+	} catch (e: unknown) {
+		console.log(e);
+
+		return { code: 500, data: null };
+	}
+}

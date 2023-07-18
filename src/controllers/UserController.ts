@@ -24,6 +24,15 @@ export async function post(req: TypedBodyRequest<NewUserModel>, res: Response) {
 		if (e instanceof ValidationError) {
 			return res.status(400).send(e.details);
 		}
+
+		res.status(500).send(e);
+	}
+}
+export async function deleteAll(_: Request, res: Response) {
+	try {
+		const response = await UserService.deleteAll();
+		res.status(response.code).send(response.data);
+	} catch (e: unknown) {
 		res.status(500).send(e);
 	}
 }
