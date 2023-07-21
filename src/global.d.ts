@@ -16,6 +16,7 @@ declare global {
 			PORT: string;
 			FRONTEND_HOST: string;
 			JWT_SECRET: string;
+			ACCESS_TOKEN: string;
 		}
 	}
 }
