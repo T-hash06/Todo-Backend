@@ -1,4 +1,4 @@
-import { Record, Number, String, Boolean, Static } from 'runtypes';
+import { Record, Number, String, Boolean, Optional, Static } from 'runtypes';
 
 export const TodoModel = Record({
 	id: Number,
@@ -15,5 +15,20 @@ export const NewTodoModel = Record({
 	priority: Number,
 });
 
+export const UpdateTodoModel = Record({
+	id: Number,
+	title: Optional(String),
+	description: Optional(String),
+	done: Optional(Boolean),
+	priority: Optional(Number),
+}).withConstraint(
+	(x) =>
+		x.description !== undefined ||
+		x.priority !== undefined ||
+		x.title !== undefined ||
+		x.done !== undefined
+);
+
 export type TodoModel = Static<typeof TodoModel>;
 export type NewTodoModel = Static<typeof NewTodoModel>;
+export type UpdateTodoModel = Static<typeof UpdateTodoModel>;

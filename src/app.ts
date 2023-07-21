@@ -9,7 +9,7 @@ config();
 const app = express.default();
 
 app.use(express.json());
-app.use(cors.default({ origin: process.env.FRONTEND_HOST }));
+app.use(cors.default({ origin: process.env.FRONTEND_HOST.split(' ') }));
 
 app.use('/', router);
 

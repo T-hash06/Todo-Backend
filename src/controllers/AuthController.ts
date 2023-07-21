@@ -27,9 +27,7 @@ export async function post(
 	res: Response
 ) {
 	try {
-		RequestSessionModel.check(req.body);
-
-		const { username, password } = req.body;
+		const { username, password } = RequestSessionModel.check(req.body);
 
 		const response = await AuthService.login(username, password);
 

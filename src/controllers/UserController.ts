@@ -15,9 +15,9 @@ export async function get(_: Request, res: Response) {
 
 export async function post(req: TypedBodyRequest<NewUserModel>, res: Response) {
 	try {
-		NewUserModel.check(req.body);
+		const body = NewUserModel.check(req.body);
 
-		const response = await UserService.createOne(req.body);
+		const response = await UserService.createOne(body);
 
 		res.status(response.code).json(response.data);
 	} catch (e: unknown) {
