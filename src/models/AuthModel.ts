@@ -2,6 +2,8 @@ import { Record, Number, String, Static } from 'runtypes';
 
 export const SessionModel = Record({
 	username: String,
+	email: String,
+	name: String,
 	iat: Number,
 	exp: Number,
 });

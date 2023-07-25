@@ -1,4 +1,9 @@
-import { verify, sign, TokenExpiredError } from 'jsonwebtoken';
+import {
+	verify,
+	sign,
+	TokenExpiredError,
+	JsonWebTokenError,
+} from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 
 import type { SessionModel } from '../models/AuthModel';
@@ -27,29 +32,37 @@ export async function checkSessionValid(
 			return { code: 401, data: null };
 		}
 
+		if (e instanceof JsonWebTokenError) {
+			return { code: 401, data: null };
+		}
+
 		return { code: 500, data: null };
 	}
 }
 
 export async function login(
-	username: string,
-	password: string
+	reqUsername: string,
+	reqPassword: string
 ): Promise<ServiceResponse<string | null>> {
 	try {
-		const user = await database.user.findUnique({ where: { username } });
+		const user = await database.user.findUnique({
+			where: { username: reqUsername },
+		});
 
 		if (user === null) {
 			return { code: 404, data: null };
 		}
 
-		const match = await compare(password, user.password);
+		const match = await compare(reqPassword, user.password);
 
 		if (match === false) {
 			return { code: 401, data: null };
 		}
 
+		const { username, email, name } = user;
+
 		const token = sign(
-			{ username: user.username },
+			{ username, name, email },
 			process.env.JWT_SECRET + startDate.toString(),
 			JwtConfig
 		);
@@ -68,8 +81,10 @@ export async function extendSession(
 	try {
 		const payload = verify(token, process.env.JWT_SECRET) as JWTPayload;
 
+		const { username, name, email } = payload;
+
 		const newToken = sign(
-			{ username: payload.username },
+			{ username, name, email },
 			process.env.JWT_SECRET,
 			JwtConfig
 		);
