@@ -6,11 +6,17 @@ import { getCredentials, UnauthorizedError } from '../util/Http';
 
 import * as TodoService from '../services/TodoService';
 
-export async function get(_: Request, res: Response) {
+export async function get(req: Request, res: Response) {
 	try {
-		const result = await TodoService.getAll();
+		const data = await getCredentials(req);
+
+		const result = await TodoService.getAll(data.username);
 		res.status(result.code).send(result.data);
 	} catch (e: unknown) {
+		if (e instanceof UnauthorizedError) {
+			return res.sendStatus(401);
+		}
+
 		res.status(500).send(e);
 	}
 }
@@ -43,7 +49,7 @@ export async function update(req: TypedBodyRequest<any>, res: Response) {
 		const body = UpdateTodoModel.check(req.body);
 		const data = await getCredentials(req);
 
-		const response = await TodoService.update(req.body, data.username);
+		const response = await TodoService.update(body, data.username);
 
 		res.status(response.code).send(response.data);
 	} catch (e: unknown) {

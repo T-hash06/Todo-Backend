@@ -6,8 +6,12 @@ import type {
 	UpdateTodoModel,
 } from '../models/TodoModel';
 
-export async function getAll(): Promise<ServiceResponse<TodoModel[] | null>> {
-	const result = await database.todo.findMany();
+export async function getAll(
+	username: string
+): Promise<ServiceResponse<TodoModel[] | null>> {
+	const result = await database.todo.findMany({
+		where: { authorUsername: username },
+	});
 
 	return { code: 200, data: result };
 }
