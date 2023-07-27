@@ -19,13 +19,18 @@ export async function getAll(
 export async function createOne(
 	newTodo: NewTodoModel,
 	username: string
-): Promise<ServiceResponse<null>> {
+): Promise<ServiceResponse<string | null>> {
 	try {
-		await database.todo.create({
-			data: { ...newTodo, done: false, authorUsername: username },
+		const response = await database.todo.create({
+			data: {
+				...newTodo,
+				done: false,
+				label: newTodo.label.toLowerCase(),
+				authorUsername: username,
+			},
 		});
 
-		return { code: 201, data: null };
+		return { code: 201, data: response.id.toString() };
 	} catch (e: unknown) {
 		console.log(e);
 
@@ -48,6 +53,10 @@ export async function update(
 
 		if (todo.authorUsername !== username) {
 			return { code: 401, data: null };
+		}
+
+		if (updateData.label !== undefined) {
+			updateData.label = updateData.label.toLowerCase();
 		}
 
 		const response = await database.todo.update({
