@@ -1,6 +1,7 @@
 import type { Request } from 'express';
 
 declare global {
+	interface TypedParamsRequest<T> extends Request<T, never, never, never> {}
 	interface TypedQueryRequest<T> extends Request<never, never, never, T> {}
 	interface TypedBodyRequest<T> extends Request<never, never, T, never> {}
 

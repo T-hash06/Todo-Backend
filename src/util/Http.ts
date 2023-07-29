@@ -31,7 +31,13 @@ export class UnauthorizedError extends Error {
 	}
 }
 
-export async function getCredentials(req: Request | TypedBodyRequest<any>) {
+export async function getCredentials(
+	req:
+		| Request
+		| TypedBodyRequest<any>
+		| TypedQueryRequest<any>
+		| TypedParamsRequest<any>
+) {
 	const header = req.headers.authorization;
 
 	if (header === undefined) {

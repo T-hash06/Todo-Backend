@@ -71,3 +71,30 @@ export async function update(
 		return { code: 500, data: null };
 	}
 }
+
+export async function deleteOne(
+	id: number,
+	username: string
+): Promise<ServiceResponse<null>> {
+	try {
+		const todo = await database.todo.findUnique({
+			where: { id },
+		});
+
+		if (todo === null) {
+			return { code: 404, data: null };
+		}
+
+		if (todo.authorUsername !== username) {
+			return { code: 401, data: null };
+		}
+
+		await database.todo.delete({ where: { id } });
+
+		return { code: 200, data: null };
+	} catch (e: unknown) {
+		console.log(e);
+
+		return { code: 500, data: null };
+	}
+}
