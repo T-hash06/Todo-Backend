@@ -12,7 +12,7 @@ import type { ServiceResponse } from '../util/Http';
 import database from '../database/db';
 
 const JwtConfig = {
-	expiresIn: '10m',
+	expiresIn: '24h',
 };
 
 const startDate = new Date().getMilliseconds();
