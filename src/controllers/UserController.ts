@@ -1,14 +1,22 @@
 import type { Request, Response } from 'express';
 import { ValidationError } from 'runtypes';
 
+import { UnauthorizedError, getCredentials } from '../util/Http';
 import { NewUserModel } from '../models/UserModel';
 import * as UserService from '../services/UserService';
 
-export async function get(_: Request, res: Response) {
+export async function get(req: Request, res: Response) {
 	try {
-		const result = await UserService.getAll();
+		const data = await getCredentials(req);
+
+		const result = await UserService.getUserData(data.username);
+
 		res.status(result.code).send(result.data);
 	} catch (e: unknown) {
+		if (e instanceof UnauthorizedError) {
+			return res.sendStatus(401);
+		}
+
 		res.status(500).send(e);
 	}
 }

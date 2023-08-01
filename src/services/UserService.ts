@@ -6,8 +6,10 @@ import type { NewUserModel, UserModel } from '../models/UserModel';
 
 import database from '../database/db';
 
-export async function getAll(): Promise<ServiceResponse<UserModel[] | null>> {
-	const user = await database.user.findMany();
+export async function getUserData(
+	username: string
+): Promise<ServiceResponse<UserModel | null>> {
+	const user = await database.user.findUnique({ where: { username } });
 
 	if (user === null) {
 		return { code: 404, data: null };
